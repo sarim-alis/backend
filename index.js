@@ -8,8 +8,13 @@ import userRoutes from "./src/routes/user.route.js";
 
 // Middleware.
 dotenv.config();
-connectDB();
 const app = express();
+
+// Connect to database (non-blocking)
+connectDB().catch(err => {
+  console.error('Database connection error:', err);
+  // Don't exit - let server start and handle DB errors gracefully
+});
 
 // CORS configuration
 const corsOptions = {
