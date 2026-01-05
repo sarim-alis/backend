@@ -40,6 +40,24 @@ app.get("/", (req, res) => {
   res.send("PartyMeet API running 🎉");
 });
 
+// Health check / Keepalive endpoint
+app.get("/health", (req, res) => {
+  res.json({ 
+    status: "ok",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    message: "Server is alive and running 🚀"
+  });
+});
+
+// Keepalive ping endpoint (for internal use)
+app.get("/ping", (req, res) => {
+  res.json({ 
+    status: "pong",
+    timestamp: new Date().toISOString()
+  });
+});
+
 app.use("/api/users", userRoutes);
 app.use("/api/events", eventRoutes);
 
@@ -72,4 +90,26 @@ app.listen(PORT, HOST, () => {
   console.log(`🔗 Database URL: ${process.env.DATABASE_URL ? 'Set ✅' : 'NOT SET ❌'}`);
   console.log(`🚀 Server ready at http://${HOST}:${PORT}`);
   console.log('='.repeat(50));
+  
+  // Keepalive mechanism - ping server every 5 minutes to prevent spin-down
+  const keepAliveInterval = 5 * 60 * 1000; // 5 minutes in milliseconds
+  const keepAliveUrl = `http://localhost:${PORT}/ping`;
+  
+  console.log('💓 Keepalive service started - pinging every 5 minutes...');
+  
+  const keepAlive = async () => {
+    try {
+      const response = await fetch(keepAliveUrl);
+      const data = await response.json();
+      console.log(`💓 Keepalive ping successful at ${data.timestamp}`);
+    } catch (error) {
+      console.error('❌ Keepalive ping failed:', error.message);
+    }
+  };
+  
+  // Start keepalive after 1 minute, then every 5 minutes
+  setTimeout(() => {
+    keepAlive(); // First ping after 1 minute
+    setInterval(keepAlive, keepAliveInterval); // Then every 5 minutes
+  }, 60 * 1000); // Wait 1 minute before first ping
 });
