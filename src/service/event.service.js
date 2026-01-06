@@ -102,14 +102,24 @@ export const createEvent = async (eventData) => {
     participants: [],
   });
 
+  // Populate user data for response
+  const populatedEvent = await Event.findById(event._id).populate("userId", "username email");
+
   return {
-    id: event._id,
-    name: event.name,
-    date: event.date,
-    location: event.location,
-    category: event.category,
-    createdAt: event.createdAt,
-    updatedAt: event.updatedAt,
+    id: populatedEvent._id,
+    name: populatedEvent.name,
+    date: populatedEvent.date,
+    location: populatedEvent.location,
+    category: populatedEvent.category,
+    createdBy: {
+      id: populatedEvent.userId._id,
+      username: populatedEvent.userId.username,
+      email: populatedEvent.userId.email,
+    },
+    participants: populatedEvent.participants || [],
+    participantsCount: populatedEvent.participants?.length || 0,
+    createdAt: populatedEvent.createdAt,
+    updatedAt: populatedEvent.updatedAt,
   };
 };
 
