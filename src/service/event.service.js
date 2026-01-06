@@ -4,7 +4,7 @@ import User from "../models/User.model.js";
 // Check if user is admin
 const isAdmin = async (userId) => {
   const user = await User.findById(userId);
-  return user && user.email === "admin@gmail.com";
+  return user && user.role === "admin";
 };
 
 // Get all events (for all users to see)

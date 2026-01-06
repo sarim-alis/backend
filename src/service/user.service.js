@@ -20,7 +20,7 @@ export const registerUser = async (userData) => {
   // Generate JWT token.
   const token = jwt.sign({ userId: user._id.toString(), email: user.email }, JWT_SECRET, { expiresIn: "1d" });
 
-  return { token, user: { id: user._id, username: user.username, email: user.email, imageUrl: user.imageUrl, createdAt: user.createdAt, isAdmin: user.email === "admin@gmail.com" }};
+  return { token, user: { id: user._id, username: user.username, email: user.email, imageUrl: user.imageUrl, role: user.role, createdAt: user.createdAt, isAdmin: user.role === "admin" }};
 };
 
 // Login user
@@ -37,7 +37,7 @@ export const loginUser = async (email, password) => {
   // Generate JWT token.
   const token = jwt.sign({ userId: user._id.toString(), email: user.email }, JWT_SECRET, { expiresIn: "7d" });
 
-  return { token, user: { id: user._id, username: user.username, email: user.email, imageUrl: user.imageUrl, isAdmin: user.email === "admin@gmail.com" }};
+  return { token, user: { id: user._id, username: user.username, email: user.email, imageUrl: user.imageUrl, role: user.role, isAdmin: user.role === "admin" }};
 };
 
 // Get user by ID.
@@ -46,7 +46,7 @@ export const getUserById = async (userId) => {
 
   if (!user) { throw new Error("User not found");}
 
-  return { id: user._id, username: user.username, email: user.email, imageUrl: user.imageUrl, createdAt: user.createdAt, isAdmin: user.email === "admin@gmail.com" };
+  return { id: user._id, username: user.username, email: user.email, imageUrl: user.imageUrl, role: user.role, createdAt: user.createdAt, isAdmin: user.role === "admin" };
 };
 
 // Update user profile.
@@ -74,5 +74,5 @@ export const updateUser = async (userId, updateData) => {
   const user = await User.findByIdAndUpdate( userId, updateFields, { new: true, runValidators: true });
   if (!user) { throw new Error("User not found");}
 
-  return { id: user._id, username: user.username, email: user.email, imageUrl: user.imageUrl, updatedAt: user.updatedAt };
+  return { id: user._id, username: user.username, email: user.email, imageUrl: user.imageUrl, role: user.role, updatedAt: user.updatedAt, isAdmin: user.role === "admin" };
 };
