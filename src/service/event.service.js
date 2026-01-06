@@ -18,11 +18,11 @@ export const getAllEvents = async (category = null) => {
     date: event.date,
     location: event.location,
     category: event.category,
-    createdBy: {
+    createdBy: event.userId ? {
       id: event.userId._id,
       username: event.userId.username,
       email: event.userId.email,
-    },
+    } : null,
     participants: event.participants || [],
     participantsCount: event.participants?.length || 0,
     createdAt: event.createdAt,
@@ -44,11 +44,11 @@ export const getEventById = async (eventId, userId) => {
     date: event.date,
     location: event.location,
     category: event.category,
-    createdBy: {
+    createdBy: event.userId ? {
       id: event.userId._id,
       username: event.userId.username,
       email: event.userId.email,
-    },
+    } : null,
     participants: event.participants || [],
     participantsCount: event.participants?.length || 0,
     isJoined: event.participants?.some((id) => id.toString() === userId.toString()) || false,
@@ -71,11 +71,11 @@ export const getJoinedEvents = async (userId, category = null) => {
     date: event.date,
     location: event.location,
     category: event.category,
-    createdBy: {
+    createdBy: event.userId ? {
       id: event.userId._id,
       username: event.userId.username,
       email: event.userId.email,
-    },
+    } : null,
     participants: event.participants || [],
     participantsCount: event.participants?.length || 0,
     createdAt: event.createdAt,
@@ -111,11 +111,11 @@ export const createEvent = async (eventData) => {
     date: populatedEvent.date,
     location: populatedEvent.location,
     category: populatedEvent.category,
-    createdBy: {
+    createdBy: populatedEvent.userId ? {
       id: populatedEvent.userId._id,
       username: populatedEvent.userId.username,
       email: populatedEvent.userId.email,
-    },
+    } : null,
     participants: populatedEvent.participants || [],
     participantsCount: populatedEvent.participants?.length || 0,
     createdAt: populatedEvent.createdAt,
