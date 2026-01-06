@@ -43,6 +43,26 @@ export const getEvents = async (req, res) => {
   }
 };
 
+// Get event by ID
+export const getEventById = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { id } = req.params;
+
+    const event = await eventService.getEventById(id, userId);
+
+    res.status(200).json({
+      success: true,
+      data: event,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message || "Failed to fetch event",
+    });
+  }
+};
+
 // Create event
 export const createEvent = async (req, res) => {
   try {

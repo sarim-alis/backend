@@ -30,6 +30,33 @@ export const getAllEvents = async (category = null) => {
   }));
 };
 
+// Get event by ID
+export const getEventById = async (eventId, userId) => {
+  const event = await Event.findById(eventId).populate("userId", "username email");
+
+  if (!event) {
+    throw new Error("Event not found");
+  }
+
+  return {
+    id: event._id,
+    name: event.name,
+    date: event.date,
+    location: event.location,
+    category: event.category,
+    createdBy: {
+      id: event.userId._id,
+      username: event.userId.username,
+      email: event.userId.email,
+    },
+    participants: event.participants || [],
+    participantsCount: event.participants?.length || 0,
+    isJoined: event.participants?.some((id) => id.toString() === userId.toString()) || false,
+    createdAt: event.createdAt,
+    updatedAt: event.updatedAt,
+  };
+};
+
 // Get events user has joined
 export const getJoinedEvents = async (userId, category = null) => {
   const query = { participants: userId };
