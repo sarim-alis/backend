@@ -127,6 +127,40 @@ export const leaveEvent = async (eventId, userId) => {
   };
 };
 
+// Update event (admin only)
+export const updateEvent = async (eventId, userId, updateData) => {
+  const userIsAdmin = await isAdmin(userId);
+  if (!userIsAdmin) {
+    throw new Error("Only admin can update events");
+  }
+
+  const event = await Event.findById(eventId);
+  if (!event) {
+    throw new Error("Event not found");
+  }
+
+  const { name, date, location, category } = updateData;
+
+  if (name) event.name = name;
+  if (date) event.date = date;
+  if (location) event.location = location;
+  if (category) event.category = category;
+
+  await event.save();
+
+  return {
+    id: event._id,
+    name: event.name,
+    date: event.date,
+    location: event.location,
+    category: event.category,
+    participants: event.participants || [],
+    participantsCount: event.participants?.length || 0,
+    createdAt: event.createdAt,
+    updatedAt: event.updatedAt,
+  };
+};
+
 // Delete event (admin only)
 export const deleteEvent = async (eventId, userId) => {
   const userIsAdmin = await isAdmin(userId);

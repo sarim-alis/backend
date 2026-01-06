@@ -119,6 +119,33 @@ export const leaveEvent = async (req, res) => {
   }
 };
 
+// Update event
+export const updateEvent = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { id } = req.params;
+    const { name, date, location, category } = req.body;
+
+    const event = await eventService.updateEvent(id, userId, {
+      name,
+      date,
+      location,
+      category,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Event updated successfully",
+      data: event,
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: error.message || "Failed to update event",
+    });
+  }
+};
+
 // Delete event
 export const deleteEvent = async (req, res) => {
   try {

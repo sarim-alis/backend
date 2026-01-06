@@ -92,7 +92,7 @@ app.listen(PORT, HOST, () => {
   console.log('='.repeat(50));
   
   // Keepalive mechanism - ping server every 5 minutes to prevent spin-down
-  const keepAliveInterval = 5 * 60 * 1000; // 5 minutes in milliseconds
+  const keepAliveInterval = 1 * 60 * 1000; // 5 minutes in milliseconds
   const keepAliveUrl = `http://localhost:${PORT}/ping`;
   
   console.log('💓 Keepalive service started - pinging every 5 minutes...');

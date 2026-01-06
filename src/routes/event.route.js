@@ -8,6 +8,7 @@ const router = express.Router();
 // All routes require authentication
 router.get("/", authenticate, eventController.getEvents);
 router.post("/", authenticate, eventController.createEvent);
+router.put("/:id", authenticate, eventController.updateEvent);
 router.post("/:id/join", authenticate, eventController.joinEvent);
 router.post("/:id/leave", authenticate, eventController.leaveEvent);
 router.delete("/:id", authenticate, eventController.deleteEvent);
